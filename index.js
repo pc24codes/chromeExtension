@@ -5,7 +5,7 @@ let myLeads = []
 //pushing a new value 
 // myLeads.push("1234566988")
 
-// //aray to string
+// //array to string
 // myLeads = JSON.stringify(myLeads)
 
 // console.log(myLeads) //prints the value
@@ -15,25 +15,35 @@ const inputEl = document.getElementById("input-el")
 const inputBtn = document.getElementById("input-btn") 
 const ulEl = document.getElementById("ul-el")
 const deleteBtn = document.getElementById("delete-btn")
-
-
 const leadsfromLocal = JSON.parse(localStorage.getItem("myLeads"))
+const tabBtn = document.getElementById("tab-btn")
 
 if(leadsfromLocal){    // this will render leads from localStorage and calls renderleads()
     myLeads = leadsfromLocal
-    render()
+    render(myLeads)
 }
+
+
+//save tab button
+tabBtn.addEventListener("click", function(){    
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+        myLeads.push(tabs[0].url)
+        localStorage.setItem("myLeads", JSON.stringify(myLeads) )
+        render(myLeads)
+    })
+})
+
 
 function render(leads){
     let listItems = ""
 
     for(i=0; i<leads.length; i++ )
     {
-        console.log(myLeads[i])
+        
         listItems += 
             `<li>
-            <a target='_blank' href='${myLeads[i]}'> 
-            ${myLeads[i]}    
+            <a target='_blank' href='${leads[i]}'> 
+            ${leads[i]}    
             </a>
             </li>`  // this is a template string
 
